@@ -171,8 +171,8 @@ class UiTextView extends UiDescriptionBasedView {
 
         this.measuredText = lines.join("\n");
         let size = {
-            width: fillHorizontal ? maxWidth : Math.min(maxWidth, Math.max(desc.minWidth, xMax - xMin)),
-            height: fillVertical ? maxHeight : Math.min(maxHeight, Math.max(desc.minHeight, textHeight))
+            width: fillHorizontal ? maxWidth : Math.min(maxWidth, Math.max(desc.minWidth || 0, xMax - xMin)),
+            height: fillVertical ? maxHeight : Math.min(maxHeight, Math.max(desc.minHeight || 0, textHeight))
         };
 
         this.setMeasuredOffset(
