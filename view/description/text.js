@@ -176,22 +176,13 @@ class UiTextView extends UiDescriptionBasedView {
         };
 
         this.setMeasuredOffset(
-            desc.alignment & UiTextView.ALIGN_CENTER_H ? Math.max(0, size.width) / 2:
-                desc.alignment & UiTextView.ALIGN_RIGHT ? Math.max(0, size.width) : 0,
-            desc.alignment & UiTextView.ALIGN_CENTER_V ? Math.max(0, size.height - textHeight) / 2 :
-                desc.alignment & UiTextView.ALIGN_BOTTOM ? Math.max(0, size.height - textHeight) : 0)
+            desc.alignment & Alignment.CENTER_H ? Math.max(0, size.width) / 2:
+                desc.alignment & Alignment.RIGHT ? Math.max(0, size.width) : 0,
+            desc.alignment & Alignment.CENTER_V ? Math.max(0, size.height - textHeight) / 2 :
+                desc.alignment & Alignment.BOTTOM ? Math.max(0, size.height - textHeight) : 0)
 
         return size;
     }
 }
-
-UiTextView.ALIGN_LEFT = 0;
-UiTextView.ALIGN_CENTER_H = 1;
-UiTextView.ALIGN_RIGHT = 2;
-UiTextView.ALIGN_TOP = 0;
-UiTextView.ALIGN_CENTER_V = 4;
-UiTextView.ALIGN_BOTTOM = 8;
-UiTextView.ALIGN_CENTER = UiTextView.ALIGN_CENTER_H | UiTextView.ALIGN_CENTER_V;
-
 
 EXPORT("UiTextView", UiTextView);
