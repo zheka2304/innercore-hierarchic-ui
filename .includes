@@ -1,0 +1,17 @@
+# use this to include all files (only for order-independent builds)
+# use !path/to/file to exclude files or directories from build
+
+# nocheck
+
+header.js
+
+internal/**
+
+view/view.js
+view/group/group.js
+view/group/*
+view/description/base.js
+
+render/window.js
+
+*/**
