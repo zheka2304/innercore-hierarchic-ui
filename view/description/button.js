@@ -10,3 +10,6 @@ class UiButtonView extends UiImageView {
     }
 }
 
+
+EXPORT("UiButtonView", UiButtonView);
+
