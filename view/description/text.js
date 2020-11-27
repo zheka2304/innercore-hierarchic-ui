@@ -10,6 +10,8 @@ class UiTextView extends UiDescriptionBasedView {
     }
 
     parse(description) {
+        description = super.parse(description);
+
         let SAMPLE_STRING = "ggOO ooo";
         let fontDesc = description.font || {};
         if (description.alignment) {
