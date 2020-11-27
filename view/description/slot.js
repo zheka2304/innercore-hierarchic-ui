@@ -28,4 +28,14 @@ class UiSlotView extends UiDescriptionBasedView {
     }
 }
 
+class UiInventorySlotView extends UiSlotView {
+    render() {
+        // the correct implementation will be { ...super.render(), type: "invSlot" } but for the sake of performance we will do this
+        return { ...this.description, type: "invSlot" };
+    }
+}
+
+
 EXPORT("UiSlotView", UiSlotView);
+EXPORT("UiInventorySlotView", UiInventorySlotView);
+
