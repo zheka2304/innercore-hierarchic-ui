@@ -12,7 +12,7 @@ class UiImageView extends UiDescriptionBasedView {
     }
 
     render() {
-        return {...this.description, type: "image" };
+        return { ...this.description, type: "image" };
     }
 
     rebuild(renderedElement, rect) {
