@@ -6,6 +6,13 @@ class UiViewGroup extends UiView {
         this.children = [];
     }
 
+    setWindow(window) {
+        super.setWindow(window);
+        for (let child of this.children) {
+            child.setWindow(window);
+        }
+    }
+
     setChildren(children) {
         for (let child of this.children) {
             child.setParent(null);
@@ -14,6 +21,7 @@ class UiViewGroup extends UiView {
         for (let child of this.children) {
             child.setParent(this);
         }
+        this.requestMeasureAndRealign();
         return this;
     }
 
@@ -35,7 +43,6 @@ class UiViewGroup extends UiView {
             child.update();
         }
     }
-
 }
 
 

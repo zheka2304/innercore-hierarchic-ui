@@ -11,6 +11,8 @@ view/view.js
 view/group/group.js
 view/group/*
 view/description/base.js
+view/description/image.js
+view/description/*
 
 render/window.js
 

@@ -20,8 +20,10 @@ class UiDescriptionBasedView extends UiView {
         if (description != null) {
             this.description = this.parse(description);
             rendered = this.render();
+            // if description has changed, request measure and realign
+            this.requestMeasureAndRealign();
         }
-        for (let subscriber in this.subscribers) {
+        for (let subscriber of this.subscribers) {
             if (rendered) {
                 // __assign in created by babel
                 // noinspection JSUnresolvedFunction
