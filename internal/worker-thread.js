@@ -10,11 +10,9 @@ class WorkerThread {
         let aLock = this._aLock;
         let qLock = this._qLock;
         qLock.lock();
-        alert("enqueue action")
         let queuedAction = new QueuedAction(action);
         this._queue.push(queuedAction);
         if (this._thread == null) {
-            alert("starting thread")
             this._thread = new java.lang.Thread(() => {
                 while (true) {
                     qLock.lock();

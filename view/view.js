@@ -109,10 +109,8 @@ class UiView {
     _enqueueRealignAsRoot() {
         let window = this.window;
         if (window != null) {
-            alert("_enqueueRealignAsRoot " + this.constructor.name)
             this._realignQueued = true;
             window.enqueue(() => {
-                alert("queued " + this.constructor.name)
                 // a flag is required in cases, when several realigns were queued
                 if (this._realignQueued) {
                     this._realignQueued = false;
@@ -132,11 +130,12 @@ class UiView {
     // should return true, if view must realign, if its child realigned
     // notice, that returning false means view will not change size depending on child alignment and size in any case
     isAffectedByChildRealign() {
-        return true;
+        // by default, view with predefined width & height must keep them unchanged
+        // otherwise, it must implement this function
+        return this.width >= 0 && this.height >= 0;
     }
 
     onChildRealigned() {
-        alert("onChildRealigned " + this.constructor.name)
         // if this is window root, or view is not affected by child realign and has cached rect
         if (this.parent == null || !this.isAffectedByChildRealign() && this._avalilableRect) {
             this._enqueueRealignAsRoot();

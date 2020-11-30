@@ -28,7 +28,6 @@ class UiTextView extends UiDescriptionBasedView {
         return {
             ...this.description,
             font: this.description.font.asScriptable(),
-            text: this.measuredText,
             multiline: true,
             type: "text"
         };
@@ -36,6 +35,7 @@ class UiTextView extends UiDescriptionBasedView {
 
     rebuild(renderedElement, rect) {
         super.rebuild(renderedElement, rect);
+        renderedElement.text = this.measuredText;
         renderedElement.font.size *= rect.scale;
     }
 
@@ -72,6 +72,7 @@ class UiTextView extends UiDescriptionBasedView {
         }
         let spaceLen = getLen(". .") - getLen("..");
         let dashLen = getLen("--");
+        maxLen -= getLen("a"); // why? who knows, just need some buffer space
 
         let getCutIndex = function(str, strLen, cutLen) {
             return Math.floor(str.length * cutLen / strLen);

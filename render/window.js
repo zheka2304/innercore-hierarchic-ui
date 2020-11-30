@@ -21,6 +21,7 @@ class UiWindow {
             this.view = view;
             if (this.view != null) {
                 this.view.setWindow(this);
+                this.worker.clearAndAwait();
                 this.view.requestMeasureAndRealign();
                 this.worker.awaitAll();
                 this.view.mount(this.content);
