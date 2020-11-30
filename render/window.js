@@ -1,11 +1,15 @@
 class UiWindow {
-    constructor(location) {
+    constructor(constraints) {
+        this.isUiWindow = true;
+
+        // noinspection JSDeprecatedSymbols
         this.defaultContainer = new UI.Container();
         this.content = new RenderedUiContent();
         this.worker = new WorkerThread();
 
+        this.constraints = UiWindowConstraints.parse(constraints);
         this.window = new UI.Window({
-            location: location,
+            location: this.constraints.getLocation(),
             elements: this.content.elements,
             drawing: this.content.drawing
         });
