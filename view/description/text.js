@@ -36,7 +36,7 @@ class UiTextView extends UiDescriptionBasedView {
     rebuild(renderedElement, rect) {
         super.rebuild(renderedElement, rect);
         renderedElement.text = this.measuredText;
-        renderedElement.font.size *= rect.scale;
+        renderedElement.font.size = this.description.font.size * rect.scale;
     }
 
     _addEndingToLastLine(lines, maxLen) {

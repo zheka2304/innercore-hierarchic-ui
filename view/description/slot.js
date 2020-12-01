@@ -1,6 +1,7 @@
 class UiSlotView extends UiDescriptionBasedView {
     constructor(description) {
         super(description);
+        this._measuredSize = 0;
     }
 
     setLinkedSlotName(name) {
@@ -14,14 +15,15 @@ class UiSlotView extends UiDescriptionBasedView {
 
     rebuild(renderedElement, rect) {
         super.rebuild(renderedElement, rect);
-        renderedElement.size = (this.description.size || 100) * this.rect.scale;
+        renderedElement.size = (this._measuredSize || 100) * this.rect.scale;
     }
 
     measureSize(availableRect, fillHorizontal, fillVertical) {
         let slotSize = (this.description.size || 100);
+        slotSize = this._measuredSize = Math.min(slotSize, Math.min(availableRect.width, availableRect.height));
         let size = {
-            width: fillHorizontal ? Math.max(slotSize, availableRect.width) : slotSize,
-            height: fillVertical ? Math.max(slotSize, availableRect.height) : slotSize
+            width: fillHorizontal ? Math.min(slotSize, availableRect.width) : slotSize,
+            height: fillVertical ? Math.min(slotSize, availableRect.height) : slotSize
         };
         this.setMeasuredOffset(Math.max(0, size.width - slotSize) / 2, Math.max(0, size.height - slotSize) / 2)
         return size;

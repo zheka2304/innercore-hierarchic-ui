@@ -66,7 +66,7 @@ class UiWindowConstraints {
         return constraints;
     }
 
-    setConstraints(constraints) {
+    addConstraints(constraints) {
         constraints = this._parseConstraints(constraints);
         for (let name in constraints) {
             if (UiWindowConstraints._namesAndOpposites[name]) {
@@ -213,7 +213,7 @@ UiWindowConstraints.parse = obj => {
     }
 
     // set constraints
-    constraints.setConstraints(obj);
+    constraints.addConstraints(obj);
 
     // set size, if defined
     if (obj.width || obj.height) {
@@ -242,7 +242,7 @@ class UiWindowConstraintsRoot extends UiWindowConstraints {
         return { y1: this.rect.y1, y2: this.rect.y2 };
     }
 
-    setConstraints(constraints) {
+    addConstraints(constraints) {
         throw "unsupported for root constraints";
     }
 }
