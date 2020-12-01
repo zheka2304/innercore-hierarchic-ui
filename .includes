@@ -14,6 +14,6 @@ view/description/base.js
 view/description/image.js
 view/description/*
 
-render/window.js
+window/**
 
 */**
