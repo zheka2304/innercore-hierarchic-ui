@@ -65,6 +65,15 @@ class UiWindow {
         let width = contentSize.width > 0 ? contentSize.width : windowRect.width;
         let height = contentSize.height > 0 ? contentSize.height : windowRect.height;
 
+        // handle auto scale
+        if (scale <= 0) {
+            if (contentSize.width > 0) {
+                scale = windowRect.width / contentSize.width;
+            } else {
+                scale = 1;
+            }
+        }
+
         // if only scale is defined, use it to adjust content size instead of adding scrolls
         if (contentSize.width <= 0) {
             width /= scale;
@@ -125,6 +134,9 @@ class UiWindow {
         this.window.close();
     }
 }
+
+UiWindow.SCALE_DEFAULT = 1;
+UiWindow.SCALE_AUTO = -1;
 
 
 EXPORT("UiWindow", UiWindow);
