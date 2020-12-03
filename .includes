@@ -7,6 +7,7 @@ header.js
 
 internal/**
 parser/storage.js
+parser/parser.js
 parser/**
 
 view/view.js
