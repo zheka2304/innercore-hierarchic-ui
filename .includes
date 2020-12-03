@@ -6,6 +6,8 @@
 header.js
 
 internal/**
+parser/storage.js
+parser/**
 
 view/view.js
 view/group/group.js
@@ -16,4 +18,3 @@ view/description/*
 
 window/**
 
-*/**

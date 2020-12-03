@@ -17,6 +17,7 @@ class UiTextView extends UiDescriptionBasedView {
         if (description.alignment) {
             fontDesc = { ...fontDesc, alignment: description.alignment & 3 };
         }
+        Utils.parseColorInDescription(fontDesc, "color");
         let font = new UI.Font(fontDesc);
         let bounds = font.getBounds(SAMPLE_STRING, 0, 0, 1);
 
@@ -188,4 +189,6 @@ class UiTextView extends UiDescriptionBasedView {
     }
 }
 
+
+ViewParser.addDefaultViewFactory("text", UiTextView);
 EXPORT("UiTextView", UiTextView);

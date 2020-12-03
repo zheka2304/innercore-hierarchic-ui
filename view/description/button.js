@@ -11,5 +11,6 @@ class UiButtonView extends UiImageView {
 }
 
 
+ViewParser.addDefaultViewFactory("button", UiButtonView);
 EXPORT("UiButtonView", UiButtonView);
 

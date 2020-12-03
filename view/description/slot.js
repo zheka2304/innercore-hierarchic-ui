@@ -30,12 +30,17 @@ class UiSlotView extends UiDescriptionBasedView {
     }
 }
 
+ViewParser.addDefaultViewFactory("slot", UiSlotView);
+
+
 class UiInventorySlotView extends UiSlotView {
     render() {
         // the correct implementation will be { ...super.render(), type: "invSlot" } but for the sake of performance we will do this
         return { ...this.description, type: "invSlot" };
     }
 }
+
+ViewParser.addDefaultViewFactory("inv_slot", UiInventorySlotView);
 
 
 EXPORT("UiSlotView", UiSlotView);

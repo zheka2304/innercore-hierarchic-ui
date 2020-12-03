@@ -1,0 +1,27 @@
+{
+  "layout_id": "view_layout.test",
+  "scope": "view",
+
+  "type": "absolute_layout",
+  "width": "fill",
+  "height": "fill",
+
+  "children": [
+    {
+      "type": "frame",
+      "width": "fill",
+      "height": "fill",
+      "desc": {
+        "bitmap": "classic_frame_bg",
+        "color": "#aaaaaa",
+        "scale": 8
+      }
+    },
+    {
+      "width": "fill",
+      "height": "fill",
+      "padding": [32],
+      "parent_id": "#embedded"
+    }
+  ]
+}

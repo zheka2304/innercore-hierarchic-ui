@@ -3,6 +3,7 @@
 class UiViewGroup extends UiView {
     constructor() {
         super();
+        this.isUiViewGroup = true;
         this.children = [];
     }
 
@@ -23,6 +24,25 @@ class UiViewGroup extends UiView {
         }
         this.requestMeasureAndRealign();
         return this;
+    }
+
+    parseJson(parser, json) {
+        super.parseJson(parser, json);
+        if (json.children) {
+            this.parseChildren(parser, json.children);
+        }
+    }
+
+    parseChildren(parser, children) {
+        if (!Array.isArray(children)) {
+            throw "children must be an array of views"
+        }
+        this.setChildren(children.reduce((result, childJson) => {
+            for (let child of parser.parseViews(childJson)) {
+                result.push(child);
+            }
+            return result;
+        }, []))
     }
 
     mount(renderedContent) {

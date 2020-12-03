@@ -55,6 +55,39 @@ class UiView {
         this.window = window;
     }
 
+    // this method is used by view parser
+    // set view parameters from given json
+    parseJson(parser, json) {
+        let parseSizeDimension = value => {
+            if (value === "wrap" || value === undefined) {
+                return UiView.WRAP;
+            }
+            if (value === "fill") {
+                return UiView.FILL;
+            }
+            if (typeof(value) !== "number" || value < 0) {
+                throw "width and height must be \"wrap\", \"fill\" or non-negative number";
+            }
+            return value;
+        }
+
+        if (json.id) {
+            if (typeof(json.id) !== "string") {
+                throw "view id must be non-empty string";
+            }
+            this.setUid(json.id);
+        }
+
+        this.setSize(parseSizeDimension(json.width, json.height));
+
+        if (json.padding) {
+            if (!Array.isArray(json.padding)) {
+                throw "padding must be number array"
+            }
+            this.setPadding(...json.padding);
+        }
+    }
+
     mount(renderedContent) {
         // mount view object into content, it then can be re-rendered or unmount
     }

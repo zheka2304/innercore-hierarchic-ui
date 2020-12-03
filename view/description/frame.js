@@ -6,6 +6,12 @@ class UiFrameView extends UiDescriptionBasedView {
         this._measuredHeight = 0;
     }
 
+    parse(description) {
+        let desc = { ...super.parse(description) };
+        Utils.parseColorInDescription(desc, "color");
+        return desc;
+    }
+
     render() {
         return { ...this.description, type: "frame" };
     }
@@ -24,4 +30,5 @@ class UiFrameView extends UiDescriptionBasedView {
 }
 
 
+ViewParser.addDefaultViewFactory("frame", UiFrameView);
 EXPORT("UiFrameView", UiFrameView);

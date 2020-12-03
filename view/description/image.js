@@ -75,4 +75,5 @@ class UiImageView extends UiDescriptionBasedView {
 }
 
 
+ViewParser.addDefaultViewFactory("image", UiImageView);
 EXPORT("UiImageView", UiImageView);

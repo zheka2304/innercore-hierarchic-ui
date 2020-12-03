@@ -25,6 +25,11 @@ class UiWindow {
         this.view = null;
     }
 
+    setBackgroundColor(color) {
+        this.content.setBackgroundColor(color);
+        return this;
+    }
+
     setView(view) {
         if (this.view !== view) {
             this.worker.clear();

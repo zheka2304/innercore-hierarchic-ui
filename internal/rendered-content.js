@@ -54,6 +54,10 @@ class RenderedUiContent {
         }
         this.drawing.push(this.backgroundColorElement);
     }
+
+    setBackgroundColor(color) {
+        this.backgroundColorElement.color = Utils.parseColor(color);
+    }
 }
 
 RenderedUiContent.TYPE_DRAWING = "drawing";

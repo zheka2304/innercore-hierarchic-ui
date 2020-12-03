@@ -28,7 +28,9 @@ class UiLinearLayout extends UiViewGroup {
     }
 }
 
+
 UiLinearLayout.VERTICAL = "vertical";
 UiLinearLayout.HORIZONTAL = "horizontal";
 
+ViewParser.addDefaultViewFactory("linear_layout", UiLinearLayout);
 EXPORT("UiLinearLayout", UiLinearLayout);

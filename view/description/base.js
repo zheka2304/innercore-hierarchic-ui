@@ -14,6 +14,15 @@ class UiDescriptionBasedView extends UiView {
         return description || {};
     }
 
+    parseJson(parser, json) {
+        super.parseJson(parser, json);
+        let desc = json.hasOwnProperty("desc") ? json.desc : json;
+        if (typeof desc !== "object") {
+            throw "view description must be object";
+        }
+        this.setDescription(desc);
+    }
+
     setDescription(description) {
         // sets description, if it has changed, updates rendered targets
         let rendered = null;
