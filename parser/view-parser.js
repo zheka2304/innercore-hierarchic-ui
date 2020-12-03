@@ -3,7 +3,7 @@ class ViewParser {
         this.storage = storage || ParserStorage.getDefault();
         this._errorHandlerSection = [];
         this._errors = [];
-        this._embedded = [];
+        this._embedded = {};
     }
 
     // this method receives description json and parses it into a form for a view parser to use
@@ -12,9 +12,12 @@ class ViewParser {
             json = { parent_id: json };
         }
         if (json.parent_id) {
+            if (typeof(json.parent_id) !== "string") {
+                throw "parent_id must be string";
+            }
             let resolved;
-            if (json.parent_id === "#embedded") {
-                resolved = this._getCurrentlyEmbedded();
+            if (json.parent_id.startsWith("#embedded")) {
+                resolved = this._getCurrentlyEmbedded(json.parent_id);
             } else {
                 resolved = this.storage.resolve(ParserStorage.SCOPE_VIEW, json.parent_id);
             }
@@ -32,17 +35,18 @@ class ViewParser {
     }
 
     _parseViews(json) {
-        let hasEmbedded = false;
+        let embeddedViews = [];
         try {
-            // noinspection JSUnresolvedVariable
-            if (json.embedded) {
-                this._pushEmbedded(this.parse(json.embedded));
-                hasEmbedded = true;
-                json = { ...json };
-                // noinspection JSUnresolvedVariable
-                delete json.embedded;
+            let _json = json;
+            for (let name in json) {
+                if (name.startsWith("embedded")) {
+                    embeddedViews.push(name);
+                    this._pushEmbedded(name, json[name]);
+                } else {
+                    _json[name] = json[name];
+                }
             }
-            json = this.parse(json);
+            json = this.parse(_json);
 
             if (!json.type) {
                 throw "missing view type";
@@ -57,8 +61,8 @@ class ViewParser {
             }
             return result;
         } finally {
-            if (hasEmbedded) {
-                this._popEmbedded();
+            for(let name of embeddedViews) {
+                this._popEmbedded(name);
             }
         }
     }
@@ -134,16 +138,33 @@ class ViewParser {
         }
     }
 
-    _pushEmbedded(json) {
-        this._embedded.push(json);
+    _pushEmbedded(name, json) {
+        name = "#" + name;
+        let stack = this._embedded[name];
+        if (!stack) {
+            this._embedded[name] = stack = [];
+        }
+        stack.push(json);
     }
 
-    _popEmbedded(json) {
-        this._embedded.pop();
+    _popEmbedded(name) {
+        name = "#" + name;
+        let stack = this._embedded[name];
+        if (!stack) {
+            throw "assertion error in _popEmbedded";
+        }
+        stack.pop();
+        if (stack.length === 0) {
+            delete this._embedded[name];
+        }
     }
 
-    _getCurrentlyEmbedded() {
-        return this._embedded[this._embedded.length - 1];
+    _getCurrentlyEmbedded(name) {
+        let stack = this._embedded[name];
+        if (!stack) {
+            throw `no embedded view passed for ${name}`
+        }
+        return stack[stack.length - 1];
     }
 }
 
