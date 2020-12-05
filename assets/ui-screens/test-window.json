@@ -1,0 +1,42 @@
+{
+    "layout_id": "test.window_layout",
+    "scope": "window_layout",
+
+    "embedded": {
+        "text": {
+            "type": "text",
+            "desc": {
+                "text": "FUCK"
+            }
+        }
+    },
+
+    "windows": [
+        {
+            "id": "main",
+            "constraints": {
+                "top": 100,
+                "left": 100,
+                "width": 500,
+                "height": 500
+            },
+
+            "view": {
+                "parent_id": "view_layout.test",
+                "embedded": {
+                    "main": "#text"
+                }
+            }
+        },
+
+        {
+            "background": "red",
+            "constraints": {
+                "left": ["main", "left", 40],
+                "right": ["main", "right", 40],
+                "top": ["main", "top", 40],
+                "bottom": ["main", "bottom", 40]
+            }
+        }
+    ]
+}

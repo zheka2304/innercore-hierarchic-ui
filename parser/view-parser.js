@@ -1,6 +1,5 @@
 class ViewParser extends ParserBase {
-    // this method receives description json and parses it into a form for a view parser to use
-    parse(json) {
+    _resolve(json) {
         if (typeof(json) === "string") {
             json = { parent_id: json };
         }
@@ -9,14 +8,15 @@ class ViewParser extends ParserBase {
                 throw "parent_id must be string";
             }
             let resolved;
-            if (json.parent_id.startsWith("#embedded")) {
-                resolved = this._getCurrentlyEmbedded(json.parent_id);
+            if (json.parent_id.startsWith("#")) {
+                resolved = this._resolve(this._getCurrentlyEmbedded(json.parent_id));
             } else {
                 resolved = this.storage.resolve(ParserStorage.SCOPE_VIEW, json.parent_id);
             }
             if (!resolved) {
                 throw `view layout id \"${ json.parent_id }\" was not resolved`;
             }
+
             delete json.parent_id;
             // noinspection JSUnresolvedFunction
             __assign(json, resolved);
@@ -30,16 +30,22 @@ class ViewParser extends ParserBase {
     _parseViews(json) {
         let embeddedViews = [];
         try {
-            let _json = json;
-            for (let name in json) {
-                if (name.startsWith("embedded")) {
-                    embeddedViews.push(name);
-                    this._pushEmbedded(name, json[name]);
-                } else {
-                    _json[name] = json[name];
+            if (typeof(json) === "object") {
+                let _json = {};
+                for (let name in json) {
+                    if (name === "embedded") {
+                        let embeddedViewsJson = json[name];
+                        for (let embeddedName in embeddedViewsJson) {
+                            embeddedViews.push(embeddedName);
+                            this._pushEmbedded(embeddedName, embeddedViewsJson[embeddedName]);
+                        }
+                    } else {
+                        _json[name] = json[name];
+                    }
                 }
+                json = _json;
             }
-            json = this.parse(_json);
+            json = this._resolve(json);
 
             if (!json.type) {
                 throw "missing view type";

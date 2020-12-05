@@ -1,4 +1,6 @@
 let FileUtils = {
+    _error: null,
+
     resolvePath(path) {
         let exists = p => new java.io.File(p).exists();
         if (!exists(path) && exists(__dir__ + path)) {
@@ -8,6 +10,7 @@ let FileUtils = {
     },
 
     readText(path) {
+        this._error = null;
         try {
             let reader = new java.io.BufferedReader(new java.io.FileReader(path));
             let str, text = "";
@@ -16,18 +19,26 @@ let FileUtils = {
             }
             return text;
         } catch (e) {
+            this._error = e;
             return null;
         }
     },
 
     readJson(path) {
+        this._error = null;
         let text = this.readText(path);
         if (text) {
             try {
                 return JSON.parse(text);
-            } catch (e) { }
+            } catch (e) {
+                this._error = e;
+            }
         }
         return null;
+    },
+
+    getError() {
+        return this._error;
     }
 }
 
@@ -57,7 +68,7 @@ class UiFileReader {
     readFile(file) {
         let json = FileUtils.readJson(FileUtils.resolvePath(file));
         if (!json) {
-            this._reportError(`failed to read json from ${json} in file ${file}`);
+            this._reportError(`failed to read json ${FileUtils.getError()} in file ${file}`);
             return;
         }
 

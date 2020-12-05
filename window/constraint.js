@@ -8,6 +8,12 @@ class UiWindowConstraints {
         this.bottom = { target: null, side: "top", offset: 0 };
         this.width = 0;
         this.height = 0;
+
+        this.listeners = [];
+    }
+
+    addListener(listener) {
+        this.listeners.push(listener);
     }
 
     // detach constraint (if opposite constraint is attached to this one, detach it as well)
@@ -66,6 +72,12 @@ class UiWindowConstraints {
         return constraints;
     }
 
+    clear() {
+        for (let name in UiWindowConstraints._namesAndOpposites) {
+            this._detach(name, this[name]);
+        }
+    }
+
     addConstraints(constraints) {
         constraints = this._parseConstraints(constraints);
         for (let name in constraints) {
@@ -100,15 +112,15 @@ class UiWindowConstraints {
 
         let coordBySide = UiWindowConstraints._rectCoordBySide;
         if (left && right) {
-            let leftBounds = left._calcXBounds(this, cache);
-            let rightBounds = right._calcXBounds(this, cache);
+            let leftBounds = left._calcXBoundsAndClip(this, cache);
+            let rightBounds = right._calcXBoundsAndClip(this, cache);
             result = { x1: leftBounds[coordBySide[this.left.side]] + this.left.offset, x2: rightBounds[coordBySide[this.right.side]] - this.right.offset };
         } else if (left) {
-            let leftBounds = left._calcXBounds(this, cache);
+            let leftBounds = left._calcXBoundsAndClip(this, cache);
             let leftBound = leftBounds[coordBySide[this.left.side]];
             result = { x1: leftBound + this.left.offset, x2: leftBound + this.left.offset + this.width };
         } else if (right) {
-            let rightBounds = right._calcXBounds(this, cache);
+            let rightBounds = right._calcXBoundsAndClip(this, cache);
             let rightBound = rightBounds[coordBySide[this.right.side]];
             result = { x1: rightBound - this.right.offset - this.width, x2: rightBound - this.right.offset };
         } else {
@@ -117,6 +129,15 @@ class UiWindowConstraints {
 
         delete cache[this.uid];
         return result;
+    }
+
+    _calcXBoundsAndClip(last, cache) {
+        let bounds = this._calcXBounds(last, cache);
+        let root = UiWindowConstraints.Root.rect;
+        return {
+            x1: Math.max(root.x1, Math.min(root.x2, bounds.x1)),
+            x2: Math.max(root.x1, Math.min(root.x2, bounds.x2))
+        }
     }
 
     _calcYBounds(last, cache) {
@@ -137,15 +158,15 @@ class UiWindowConstraints {
 
         let coordBySide = UiWindowConstraints._rectCoordBySide;
         if (top && bottom) {
-            let topBounds = top._calcYBounds(this, cache);
-            let bottomBounds = bottom._calcYBounds(this, cache);
+            let topBounds = top._calcYBoundsAndClip(this, cache);
+            let bottomBounds = bottom._calcYBoundsAndClip(this, cache);
             result = { y1: topBounds[coordBySide[this.top.side]] + this.top.offset, y2: bottomBounds[coordBySide[this.bottom.side]] - this.bottom.offset };
         } else if (top) {
-            let topBounds = top._calcYBounds(this, cache);
+            let topBounds = top._calcYBoundsAndClip(this, cache);
             let topBound = topBounds[coordBySide[this.top.side]];
             result = { y1: topBound + this.top.offset, y2: topBound + this.top.offset + this.height };
         } else if (bottom) {
-            let bottomBounds = bottom._calcYBounds(this, cache);
+            let bottomBounds = bottom._calcYBoundsAndClip(this, cache);
             let bottomBound = bottomBounds[coordBySide[this.bottom.side]];
             result = { y1: bottomBound - this.bottom.offset - this.height, y2: bottomBound - this.bottom.offset };
         } else {
@@ -156,16 +177,24 @@ class UiWindowConstraints {
         return result;
     }
 
+    _calcYBoundsAndClip(last, cache) {
+        let bounds = this._calcYBounds(last, cache);
+        let root = UiWindowConstraints.Root.rect;
+        return {
+            y1: Math.max(root.y1, Math.min(root.y2, bounds.y1)),
+            y2: Math.max(root.y1, Math.min(root.y2, bounds.y2))
+        }
+    }
+
     // calculate rect
     getRect() {
-        let xBounds = this._calcXBounds(null, {});
-        let yBounds = this._calcYBounds(null, {});
-        let root = UiWindowConstraints.Root.rect;
+        let xBounds = this._calcXBoundsAndClip(null, {});
+        let yBounds = this._calcYBoundsAndClip(null, {});
         return new UiRect(
-            Math.min(root.x2, Math.max(root.x1, xBounds.x1)),
-            Math.min(root.y2, Math.max(root.y1, yBounds.y1)),
-            Math.min(root.x2, Math.max(root.x1, xBounds.x2)),
-            Math.min(root.y2, Math.max(root.y1, yBounds.y2))
+            xBounds.x1,
+            yBounds.y1,
+            xBounds.x2,
+            yBounds.y2
         );
     }
 
@@ -177,6 +206,26 @@ class UiWindowConstraints {
             width: rect.width,
             height: rect.height
         };
+    }
+
+    dispatchChangedEvent(_cache) {
+        if (!_cache) {
+            _cache = {};
+        }
+        if (_cache[this.uid]) {
+            return;
+        }
+        _cache[this.uid] = true;
+        for (let listener of this.listeners) {
+            listener(this);
+        }
+        for (let name in UiWindowConstraints._namesAndOpposites) {
+            let target = this[name].target;
+            if (target) {
+                target.dispatchChangedEvent(_cache);
+            }
+        }
+        delete _cache[this.uid];
     }
 }
 

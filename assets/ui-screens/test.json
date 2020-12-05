@@ -20,8 +20,8 @@
     {
       "width": "fill",
       "height": "fill",
-      "padding": [32],
-      "parent_id": "#embedded"
+      "padding": [32, 32, 32, 32],
+      "parent_id": "#main"
     }
   ]
 }

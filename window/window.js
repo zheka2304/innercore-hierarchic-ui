@@ -8,10 +8,11 @@ class UiWindow {
         this.worker = new WorkerThread();
 
         this.constraints = UiWindowConstraints.parse(constraints);
+        this.constraints.addListener(() => this.queueLocationUpdate());
         this._contentSize = this._parseContentSizeDescription(contentSize);
-        this._contentRect = null;     // non-null, will be _updateRectAndLocation
-        this._windowRect = null;      // non-null, will be _updateRectAndLocation
-        this._windowLocation = null;  // non-null, will be _updateRectAndLocation
+        this._contentRect = null;     // non-null, will be set in _updateRectAndLocation
+        this._windowRect = null;      // non-null, will be set in _updateRectAndLocation
+        this._windowLocation = null;  // non-null, will be set in _updateRectAndLocation
         this._updateRectAndLocation();
 
         this._windowDescription = {
@@ -32,12 +33,10 @@ class UiWindow {
 
     setView(view) {
         if (this.view !== view) {
-            this.worker.clear();
             this.content.clear();
             this.view = view;
             if (this.view != null) {
                 this.view.setWindow(this);
-                this.worker.clearAndAwait();
                 this.view.requestMeasureAndRealign();
                 this.worker.awaitAll();
                 this.view.mount(this.content);
@@ -87,14 +86,15 @@ class UiWindow {
             height /= scale;
         }
 
-        this._windowLocation = {
+        // noinspection JSUnresolvedFunction
+        this._windowLocation = __assign(this._windowLocation || {}, {
             x: windowRect.x1,
             y: windowRect.y1,
             width: windowRect.width,
             height: windowRect.height,
             scrollX: Math.max(windowRect.width, width * scale),
             scrollY: Math.max(windowRect.height, height * scale)
-        }
+        });
 
         let targetWidth = width;
         let srcWidth = 1000;
@@ -112,6 +112,39 @@ class UiWindow {
             srcWidth,
             srcHeight
         ).scaled(targetWidth);
+
+        this._applyLocation();
+    }
+
+    _applyLocation() {
+        if (this.window) {
+            let location = this.window.getLocation();
+            // copy props x, y, width, height, scrollX, scrollY to fields of java object with same names
+            for (let prop in this._windowLocation) {
+                location[prop] = this._windowLocation[prop];
+            }
+            location.getScale(); // this will refresh scale value
+            // TODO: force window location rebuild (if already opened)
+        }
+    }
+
+    setContentSize(contentSize, preventUpdate) {
+        this._contentSize = this._parseContentSizeDescription(contentSize);
+        if (!preventUpdate) {
+            this.queueLocationUpdate();
+        }
+    }
+
+    setConstraints(constraints) {
+        this.constraints.clear();
+        this.constraints.add(constraints);
+        this.queueBoundLocationsUpdate();
+    }
+
+    addConstraints(constraints) {
+        this.constraints.addConstraints(constraints);
+        this.queueBoundLocationsUpdate();
+        return this;
     }
 
     getRect() {
@@ -120,6 +153,16 @@ class UiWindow {
 
     enqueue(action) {
         return this.worker.enqueue(action);
+    }
+
+    // updates only this window
+    queueLocationUpdate() {
+        this.worker.enqueue(() => this._updateRectAndLocation());
+    }
+
+    // updates this and all bound windows
+    queueBoundLocationsUpdate() {
+        this.worker.enqueue(() => this.constraints.dispatchChangedEvent());
     }
 
     queueRefresh() {
@@ -137,6 +180,10 @@ class UiWindow {
 
     close() {
         this.window.close();
+    }
+
+    getNativeWindow() {
+        return this.window;
     }
 }
 

@@ -11,6 +11,7 @@ parser/parser.js
 parser/**
 
 view/view.js
+view/null-view.js
 view/group/group.js
 view/group/*
 view/description/base.js
