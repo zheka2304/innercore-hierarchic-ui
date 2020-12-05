@@ -4,6 +4,22 @@ class UiLinearLayout extends UiViewGroup {
         this.isHorizontal = UiLinearLayout.HORIZONTAL === orientation;
     }
 
+    setOrientation(orientation) {
+        if (orientation === UiLinearLayout.VERTICAL || orientation === UiLinearLayout.HORIZONTAL) {
+            this.isHorizontal = UiLinearLayout.HORIZONTAL === orientation;
+        } else {
+            throw `layout orientation must be "${UiLinearLayout.VERTICAL}" or "${UiLinearLayout.HORIZONTAL}", got ${orientation}`
+        }
+    }
+
+    parseJson(parser, json) {
+        super.parseJson(parser, json);
+        let orientation = json.orientation;
+        if (orientation) {
+            this.setOrientation(orientation);
+        }
+    }
+
     measureSize(rect, fillHorizontal, fillVertical) {
         let width = fillHorizontal ? rect.width : 0;
         let height = fillVertical ? rect.height : 0;

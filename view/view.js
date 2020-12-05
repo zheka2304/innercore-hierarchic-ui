@@ -91,7 +91,7 @@ class UiView {
             this.setUid(json.id);
         }
 
-        this.setSize(parseSizeDimension(json.width, json.height));
+        this.setSize(parseSizeDimension(json.width), parseSizeDimension(json.height));
 
         if (json.padding) {
             if (!Array.isArray(json.padding)) {

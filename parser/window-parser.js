@@ -84,6 +84,7 @@ class WindowParser extends ParserBase {
     _parseWindow(window, windowMap, json) {
         if (json.constraints) {
             let constraints = this._parseConstraints(json.constraints, windowMap);
+            window.constraints.detachRootConstraints();
             window.constraints.addConstraints(constraints);
             window.constraints.setSize(json.constraints.width || 0, json.constraints.height || 0);
         }
@@ -135,7 +136,7 @@ class WindowParser extends ParserBase {
                     id = "anonymous-window-" + anonymousId++;
                 }
                 windowsJson[id] = windowJson;
-                windowsMap[id] = new UiWindow({left: 0, top: 0, width: 100, height: 100});
+                windowsMap[id] = new UiWindow({top: 0, left: 0, width: 100, height: 100});
             }
 
             for (let id in windowsJson) {

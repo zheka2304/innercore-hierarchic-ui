@@ -22,7 +22,7 @@
             },
 
             "view": {
-                "parent_id": "view_layout.test",
+                "parent_id": "test_view",
                 "embedded": {
                     "main": "#text"
                 }

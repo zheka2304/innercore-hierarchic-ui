@@ -137,7 +137,7 @@ class UiWindow {
 
     setConstraints(constraints) {
         this.constraints.clear();
-        this.constraints.add(constraints);
+        this.constraints.addConstraints(constraints);
         this.queueBoundLocationsUpdate();
     }
 

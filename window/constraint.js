@@ -89,6 +89,14 @@ class UiWindowConstraints {
         return this;
     }
 
+    detachRootConstraints() {
+        for (let name in UiWindowConstraints._namesAndOpposites) {
+            if (this[name].target === UiWindowConstraints.Root) {
+                this._detach(name, this[name]);
+            }
+        }
+    }
+
     setSize(width, height) {
         this.width = width;
         this.height = height;

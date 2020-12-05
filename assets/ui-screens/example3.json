@@ -1,0 +1,48 @@
+{
+  "layout_id": "framed_content",
+  "scope": "view",
+
+  "type": "absolute_layout",
+  "width": "fill",
+  "height": "fill",
+
+  "children": [
+    {
+      "type": "frame",
+      "width": "fill",
+      "height": "fill",
+      "desc": {
+        "bitmap": "classic_frame_bg",
+        "color": "#aaaaaa",
+        "scale": 4
+      }
+    },
+
+    {
+      "type": "linear_layout",
+      "orientation": "vertical",
+
+      "width": "fill",
+      "height": "fill",
+      "padding": [16],
+
+      "children": [
+        {
+          "type": "text",
+          "desc": {
+            "text": "some long test text"
+          }
+        },
+        {
+          "type": "image",
+          "width": 200,
+          "height": 200,
+          "padding": [20],
+          "desc": {
+            "bitmap": "icon_menu_innercore"
+          }
+        }
+      ]
+    }
+  ]
+}
