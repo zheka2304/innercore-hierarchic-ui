@@ -71,4 +71,26 @@ class UiWindowGroup {
     getNativeWindow() {
         return this.windowGroup;
     }
+
+    getViewById(id) {
+        for(let name in this._windows) {
+            let view = this._windows[name].getViewById(id);
+            if (view) {
+                return view;
+            }
+        }
+        return null;
+    }
+
+    getAllViewsById(id) {
+        let result = [];
+        this.addAllViewsWithId(result, id);
+        return result;
+    }
+
+    addAllViewsWithId(result, id) {
+        for(let name in this._windows) {
+            this._windows[name].addAllViewsWithId(result, id);
+        }
+    }
 }

@@ -23,6 +23,19 @@ class UiView {
         return this;
     }
 
+    getViewById(id) {
+        if (this.uid === id) {
+            return this;
+        }
+        return null;
+    }
+
+    addAllViewsWithId(result, id) {
+        if (this.uid === id) {
+            result.push(this);
+        }
+    }
+
     setSize(width, height) {
         this.width = width;
         this.height = height;

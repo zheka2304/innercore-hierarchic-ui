@@ -45,6 +45,28 @@ class UiViewGroup extends UiView {
         }, []))
     }
 
+    getViewById(id) {
+        if (this.uid === id) {
+            return this;
+        }
+        for (let child of this.children) {
+            let view = child.getViewById(id);
+            if (view) {
+                return view;
+            }
+        }
+        return null;
+    }
+
+    addAllViewsWithId(result, id) {
+        if (this.uid === id) {
+            result.push(this);
+        }
+        for (let child of this.children) {
+            child.addAllViewsWithId(result, id);
+        }
+    }
+
     mount(renderedContent) {
         for (let child of this.children) {
             child.mount(renderedContent);

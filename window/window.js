@@ -185,6 +185,28 @@ class UiWindow {
     getNativeWindow() {
         return this.window;
     }
+
+    getViewById(id) {
+        if (!this.view) {
+            return null;
+        }
+        return this.view.getViewById(id);
+    }
+
+    getAllViewsById(id) {
+        if (!this.view) {
+            return [];
+        }
+        let result = [];
+        this.view.addAllViewsWithId(result, id);
+        return result;
+    }
+
+    addAllViewsWithId(result, id) {
+        if (this.view) {
+            this.view.addAllViewsWithId(result, id);
+        }
+    }
 }
 
 UiWindow.SCALE_DEFAULT = 1;
