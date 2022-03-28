@@ -1,3 +1,5 @@
+[👉 Russian 👈](README.ru.md)
+
 # Inner Core Hierarchic UI Library
 This library allows to create hierarchic layout-based UI for Inner Core mods. 
 
@@ -8,7 +10,7 @@ All your window layout and view are loaded by default from `ui-screens` director
 
 To create your first view create `test-view.json` inside `ui-screens` directory, this will be a basic text view.
 
-```
+```yaml
 {
     // declare type of resource, and id, that is used to access this resource
     "layout_id": "test_view",
@@ -24,7 +26,7 @@ To create your first view create `test-view.json` inside `ui-screens` directory,
 
 Then, declare window layout, that represents simple window, containing our view:
 
-```
+```yaml
 {
     "layout_id": "test_window",
     "scope": "window_layout",
@@ -51,7 +53,7 @@ Then, declare window layout, that represents simple window, containing our view:
 ```
 
 To parse and show this simple window, use `UiStaticParser`:
-```
+```js
 let window = UiStaticParser.parseWindowGroup("test_window");
 window.open(); // to open the window without any container
 window.getNativeWindow(); // to get Inner Core window instance (in this case UI.WindowGroup)
@@ -63,7 +65,7 @@ On of key features, introduced by this library are layouts and view hierarchy. L
 Absolute layouts just align all views over each other according to their paddings and sizes, and linear layout align all views sequentially vertically or horizontally.
 
 Lets create a frame, that contains text and then image:
-```
+```yaml
 {
     "layout_id": "framed_content",
     "scope": "view",
@@ -131,7 +133,7 @@ The more complex concept is embedded views. You can add property `"embedded": {"
 
 In following example we will make and use view layout, that represents a frame with a view inside of it.
 
-```
+```yaml
 {
     "layout_id": "view_frame",
     "scope": "view",
@@ -163,7 +165,7 @@ In following example we will make and use view layout, that represents a frame w
 ```
 
 Next we will embed view into this frame.
-```
+```yaml
 {
     "layout_id": "embedded_framed_content",
     "scope": "view",
